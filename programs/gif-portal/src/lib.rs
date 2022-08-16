@@ -14,6 +14,15 @@ pub mod gif_portal {
         base_account.total_gifs = 0;
         Ok(())
     }
+
+    // Increment Gif counter
+    pub fn add_gif(ctx: Context<AddGif>) -> Result<()> {
+        // Get the reference to the account and increment total_gifs
+        let base_account = &mut ctx.accounts.base_account;
+        base_account.total_gifs += 1;
+
+        Ok(())
+    }
 }
 
 // Attach certain variables to the initiliaze context
@@ -29,6 +38,16 @@ pub struct Initialize<'info> {
 
     // A reference to the SystemProgram -> create accounts on solana
     pub system_program: Program<'info, System>,
+}
+
+/**
+ * @desc -> Create a `Context` named `AddGif` that has access to a mutable reference to `base_account`
+ * (can change the `total_gifs` value stored in `BaseAccount`)
+ */
+#[derive(Accounts)]
+pub struct AddGif<'info> {
+    #[account(mut)]
+    pub base_account: Account<'info, BaseAccount>,
 }
 
 // Tell solana what we want to store in this account
